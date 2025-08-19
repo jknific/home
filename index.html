@@ -535,21 +535,23 @@
                 if (isTouchDevice) {
                     // Mobile: tap to flip, tap button to navigate
                     tile.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
                         // If clicking the link button, navigate
-                        if (e.target.classList.contains('tile-link')) {
+                        if (e.target.classList.contains('tile-link') || e.target.parentElement.classList.contains('tile-link')) {
                             e.stopPropagation();
                             window.open(link, '_blank');
                             return;
                         }
                         
-                        // Otherwise toggle the flip
+                        // Toggle the flip state
                         this.classList.toggle('flipped');
                     });
                 } else {
                     // Desktop: click to navigate directly
                     tile.addEventListener('click', function(e) {
                         // If clicking the link button on the back, navigate
-                        if (e.target.classList.contains('tile-link')) {
+                        if (e.target.classList.contains('tile-link') || e.target.parentElement.classList.contains('tile-link')) {
                             e.stopPropagation();
                             window.open(link, '_blank');
                             return;
