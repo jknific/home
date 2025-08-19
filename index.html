@@ -323,7 +323,23 @@
 
             .tile {
                 width: 200px;
-                height: 200px;
+                min-height: 200px;
+                height: auto;
+            }
+
+            .tile-inner {
+                min-height: 200px;
+                height: 100%;
+            }
+
+            .tile-front, .tile-back {
+                min-height: 200px;
+                height: auto;
+            }
+
+            /* Enable tap to flip on mobile */
+            .tile.flipped .tile-inner {
+                transform: rotateY(180deg);
             }
 
             .emoji {
@@ -337,13 +353,24 @@
 
             .tile-back {
                 padding: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                min-height: 200px;
             }
 
             .tile-back h3 {
                 font-size: 1.2rem;
+                margin-bottom: 10px;
             }
 
             .tile-back p {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+
+            .tile-link {
+                padding: 8px 20px;
                 font-size: 0.9rem;
             }
         }
@@ -370,7 +397,35 @@
 
             .tile {
                 width: 160px;
-                height: 160px;
+                min-height: 160px;
+                height: auto;
+            }
+
+            .tile-inner {
+                min-height: 160px;
+            }
+
+            .tile-front, .tile-back {
+                min-height: 160px;
+            }
+
+            .tile-back {
+                padding: 15px;
+                min-height: 160px;
+            }
+
+            .tile-back h3 {
+                font-size: 1.1rem;
+            }
+
+            .tile-back p {
+                font-size: 0.85rem;
+                margin-bottom: 12px;
+            }
+
+            .tile-link {
+                padding: 6px 15px;
+                font-size: 0.85rem;
             }
 
             .emoji {
@@ -387,7 +442,7 @@
     <h1>John Knific</h1>
     
     <div class="tiles-container">
-        <div class="tile" onclick="window.open('https://www.linkedin.com/in/johnknific/', '_blank')">
+        <div class="tile" data-link="https://www.linkedin.com/in/johnknific/">
             <div class="tile-inner">
                 <div class="tile-front">
                     <div class="emoji">👋</div>
@@ -396,12 +451,12 @@
                 <div class="tile-back">
                     <h3>Connect</h3>
                     <p>Message me on LinkedIn</p>
-                    <a href="https://www.linkedin.com/in/johnknific/" target="_blank" class="tile-link" onclick="event.stopPropagation()">Visit Profile</a>
+                    <a href="https://www.linkedin.com/in/johnknific/" target="_blank" class="tile-link">Visit Profile</a>
                 </div>
             </div>
         </div>
 
-        <div class="tile" onclick="window.open('https://k2vp.com/', '_blank')">
+        <div class="tile" data-link="https://k2vp.com/">
             <div class="tile-inner">
                 <div class="tile-front">
                     <div class="emoji">🚀</div>
@@ -410,12 +465,12 @@
                 <div class="tile-back">
                     <h3>Build</h3>
                     <p>We make products for transformative companies</p>
-                    <a href="https://k2vp.com/" target="_blank" class="tile-link" onclick="event.stopPropagation()">Learn More</a>
+                    <a href="https://k2vp.com/" target="_blank" class="tile-link">Learn More</a>
                 </div>
             </div>
         </div>
 
-        <div class="tile" onclick="window.open('https://jknific.github.io/inorbit', '_blank')">
+        <div class="tile" data-link="https://jknific.github.io/inorbit">
             <div class="tile-inner">
                 <div class="tile-front">
                     <div class="emoji">🎹</div>
@@ -424,10 +479,50 @@
                 <div class="tile-back">
                     <h3>Listen</h3>
                     <p>Explore my latest creative project</p>
-                    <a href="https://jknific.github.io/inorbit" target="_blank" class="tile-link" onclick="event.stopPropagation()">Explore Music</a>
+                    <a href="https://jknific.github.io/inorbit" target="_blank" class="tile-link">Explore Music</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Handle tile interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const tiles = document.querySelectorAll('.tile');
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            tiles.forEach(tile => {
+                const link = tile.dataset.link;
+                
+                if (isTouchDevice) {
+                    // Mobile: tap to flip, tap button to navigate
+                    tile.addEventListener('click', function(e) {
+                        // If clicking the link button, navigate
+                        if (e.target.classList.contains('tile-link')) {
+                            e.stopPropagation();
+                            window.open(link, '_blank');
+                            return;
+                        }
+                        
+                        // Otherwise toggle the flip
+                        this.classList.toggle('flipped');
+                    });
+                } else {
+                    // Desktop: click to navigate directly
+                    tile.addEventListener('click', function(e) {
+                        // If clicking the link button on the back, navigate
+                        if (e.target.classList.contains('tile-link')) {
+                            e.stopPropagation();
+                            window.open(link, '_blank');
+                            return;
+                        }
+                        
+                        // On desktop, clicking the tile navigates
+                        window.open(link, '_blank');
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
