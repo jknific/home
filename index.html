@@ -324,51 +324,45 @@
             .tile {
                 width: 200px;
                 height: 200px;
-                perspective: none;
-                transition: height 0.3s ease;
+                perspective: 1000px;
             }
 
             .tile-inner {
-                height: 200px;
-                transform-style: none;
-                transition: none;
-            }
-
-            .tile-front, .tile-back {
-                position: static;
+                position: relative;
                 width: 100%;
                 height: 100%;
-                display: none;
-                border-radius: 20px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            }
-
-            .tile-front {
-                display: flex;
-            }
-
-            .tile-back {
-                transform: none;
-            }
-
-            /* Show/hide based on flipped state */
-            .tile.flipped .tile-front {
-                display: none;
-            }
-
-            .tile.flipped .tile-back {
-                display: flex;
-            }
-
-            .tile.flipped {
-                height: auto;
-                min-height: 200px;
+                text-align: center;
+                transition: transform 0.6s;
+                transform-style: preserve-3d;
             }
 
             .tile.flipped .tile-inner {
-                height: auto;
-                min-height: 200px;
-                transform: none;
+                transform: rotateY(180deg);
+            }
+
+            .tile-front, .tile-back {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                border-radius: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+            }
+
+            .tile-front {
+                background: rgba(255, 255, 255, 0.95);
+            }
+
+            .tile-back {
+                background: rgba(255, 255, 255, 0.98);
+                transform: rotateY(180deg);
+                padding: 30px;
             }
 
             .emoji {
@@ -427,25 +421,44 @@
             .tile {
                 width: 160px;
                 height: 160px;
-                transition: height 0.3s ease;
+                perspective: 1000px;
             }
 
             .tile-inner {
-                height: 160px;
-            }
-
-            .tile-front, .tile-back {
+                position: relative;
+                width: 100%;
                 height: 100%;
-            }
-
-            .tile.flipped {
-                height: auto;
-                min-height: 160px;
+                text-align: center;
+                transition: transform 0.6s;
+                transform-style: preserve-3d;
             }
 
             .tile.flipped .tile-inner {
-                height: auto;
-                min-height: 160px;
+                transform: rotateY(180deg);
+            }
+
+            .tile-front, .tile-back {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                border-radius: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+            }
+
+            .tile-front {
+                background: rgba(255, 255, 255, 0.95);
+            }
+
+            .tile-back {
+                background: rgba(255, 255, 255, 0.98);
+                transform: rotateY(180deg);
             }
 
             .tile-back {
@@ -502,7 +515,7 @@
                 </div>
                 <div class="tile-back">
                     <h3>Build</h3>
-                    <p>We make products for transformative companies</p>
+                    <p>Making incredible products</p>
                     <a href="https://k2vp.com/" target="_blank" class="tile-link">Learn More</a>
                 </div>
             </div>
@@ -533,25 +546,42 @@
                 const link = tile.dataset.link;
                 
                 if (isTouchDevice) {
-                    // Mobile: tap to flip, tap button to navigate
-                    tile.addEventListener('click', function(e) {
-                        e.preventDefault();
+                    // Mobile: tap to flip card, tap button to navigate
+                    let touchHandled = false;
+                    
+                    tile.addEventListener('touchstart', function(e) {
+                        touchHandled = false;
+                    });
+                    
+                    tile.addEventListener('touchend', function(e) {
+                        if (touchHandled) return;
+                        touchHandled = true;
                         
-                        // If clicking the link button, navigate
-                        if (e.target.classList.contains('tile-link') || e.target.parentElement.classList.contains('tile-link')) {
+                        // If clicking the link button when flipped, navigate
+                        if (e.target.classList.contains('tile-link')) {
+                            e.preventDefault();
                             e.stopPropagation();
                             window.open(link, '_blank');
                             return;
                         }
                         
-                        // Toggle the flip state
+                        // Otherwise, toggle the flip state
+                        e.preventDefault();
                         this.classList.toggle('flipped');
                     });
+                    
+                    // Prevent click events after touch
+                    tile.addEventListener('click', function(e) {
+                        if (touchHandled) {
+                            e.preventDefault();
+                            return;
+                        }
+                    });
                 } else {
-                    // Desktop: click to navigate directly
+                    // Desktop: hover to flip, click to navigate
                     tile.addEventListener('click', function(e) {
                         // If clicking the link button on the back, navigate
-                        if (e.target.classList.contains('tile-link') || e.target.parentElement.classList.contains('tile-link')) {
+                        if (e.target.classList.contains('tile-link')) {
                             e.stopPropagation();
                             window.open(link, '_blank');
                             return;
