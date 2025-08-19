@@ -17,14 +17,14 @@
         body {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: #0a0a0a;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         body::before {
@@ -294,15 +294,24 @@
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            body {
+                padding: 40px 20px 20px 20px;
+                justify-content: center;
+                min-height: 100vh;
+                height: auto;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
             h1 {
                 font-size: 2.5rem;
-                margin-bottom: 40px;
+                margin-bottom: 30px;
                 letter-spacing: 2px;
             }
 
             .tiles-container {
                 flex-direction: column;
-                gap: 30px;
+                gap: 20px;
             }
 
             .tile {
@@ -332,14 +341,28 @@
         }
 
         @media (max-width: 480px) {
+            body {
+                padding: 30px 20px 20px 20px;
+                justify-content: center;
+                min-height: 100vh;
+                height: auto;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
             h1 {
                 font-size: 2rem;
+                margin-bottom: 25px;
                 letter-spacing: 1px;
             }
 
+            .tiles-container {
+                gap: 15px;
+            }
+
             .tile {
-                width: 180px;
-                height: 180px;
+                width: 160px;
+                height: 160px;
             }
 
             .emoji {
